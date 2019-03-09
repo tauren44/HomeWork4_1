@@ -6,32 +6,21 @@ import java.util.Optional;
 import java.util.function.BinaryOperator;
 
 public class Calculator {
-    private static Map<Character, BinaryOperator<Double>> equations;
-
-    static {
-        BinaryOperator<Double> add = (x, y) -> x + y;
-        BinaryOperator<Double> sub = (x, y) -> x - y;
-        BinaryOperator<Double> multiply = (x, y) -> x * y;
-        BinaryOperator<Double> div = (x, y) -> x / y;
-        BinaryOperator<Double> mathRoot = (x, y) -> Math.pow(x, 1 / y);
-        BinaryOperator<Double> pow = Math::pow;
-        BinaryOperator<Double> expr = (x, y) -> Math.pow(((x + y) / (x + 117)), y);
-
-        equations = new HashMap<Character, BinaryOperator<Double>>() {{
-            put('+', add);
-            put('-', sub);
-            put('*', multiply);
-            put('/', div);
-            put('r', mathRoot);
-            put('^', pow);
-            put('&', expr);
+    private static Map<Character, BinaryOperator<Double>> equations
+            = new HashMap<Character, BinaryOperator<Double>>() {{
+            put('+', (x, y) -> x + y);
+            put('-', (x, y) -> x - y);
+            put('*', (x, y) -> x * y);
+            put('/', (x, y) -> x / y);
+            put('r', (x, y) -> Math.pow(x, 1 / y));
+            put('^', Math::pow);
+            put('&', (x, y) -> Math.pow(((x + y) / (x + 117)), y));
         }};
-    }
 
     public static double calculate(double x, char operation, double y) {
-        Optional.ofNullable(equations.get(operation)).orElseThrow(() ->
-                new IllegalArgumentException("Illegal operator. List of operators : +,-,*,/,r,^,&"));
-        BinaryOperator<Double> result = equations.get(operation);
-        return result.apply(x, y);
+       return Optional.ofNullable(equations.get(operation)).orElseThrow(() ->
+                new IllegalArgumentException("Illegal operator. List of operators : +,-,*,/,r,^,&"))
+               .apply(x ,y);
+
     }
 }
